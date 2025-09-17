@@ -3,7 +3,7 @@
 The official implementation of the paper: 
 
 **Beyond Frame-wise Tracking: A Trajectory-based Paradigm for Efficient Point Cloud Tracking**
-
+1†, 2†∗, Jian Li1, Shibo Zhao2, Muqing Cao2, Qin Wang1‡
 >  BaiChen Fan, [Sifan Zhou](https://scholar.google.com/citations?user=kSdqoi0AAAAJ&hl=zh-CN&oi=ao), [Jian Li](https://scholar.google.com/citations?hl=zh-CN&user=cpo-QsMAAAAJ), [Shibo Zhao](https://scholar.google.com/citations?hl=zh-CN&user=dCGZsPkAAAAJ), [Muqing Cao](https://scholar.google.com/citations?hl=zh-CN&user=ddBNGlwAAAAJ), [Qin Wang](https://scholar.google.com/citations?user=uJUuhTYAAAAJ&hl=zh-CN&oi=ao).
 
 [//]: # (> 📜 [[technical report]&#40;https://arxiv.org/abs/2407.05238&#41;], 🤗 [[model weights]&#40;https://drive.google.com/drive/folders/xx&#41;])
