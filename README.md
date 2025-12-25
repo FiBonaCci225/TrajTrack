@@ -36,7 +36,7 @@ The official implementation of the paper:
 
 <div id="top" align="center">
 <p align="center">
-<img src="figures/nuscenes.png" width="1000px" >
+<img src="figures/nuScenes_table.png" width="1000px" >
 </p>
 </div>
 
@@ -85,6 +85,7 @@ If any parts of our paper and code help your research, please consider citing us
  title={Beyond Frame-wise Tracking: A Trajectory-based Paradigm for Efficient Point Cloud Tracking,
  year={2025}
 }
+
 
 
 
