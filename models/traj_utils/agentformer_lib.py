@@ -1,24 +1,21 @@
-"""
-Modified version of PyTorch Transformer module for the implementation of Agent-Aware Attention (L290-L308)
-"""
-
-
 import warnings
 import copy
 
-from models.traj_utils import torch
-from models.traj_utils.torch import functional as F
-from models.traj_utils.torch import Module
-from models.traj_utils.torch import ModuleList
-from models.traj_utils.torch import Dropout
-from models.traj_utils.torch import Linear, NonDynamicallyQuantizableLinear as _LinearWithBias
-from models.traj_utils.torch import LayerNorm
-from models.traj_utils.torch import xavier_uniform_
-from models.traj_utils.torch import constant_
-from models.traj_utils.torch import xavier_normal_
-from models.traj_utils.torch import Parameter
-from models.traj_utils.torch import has_torch_function, handle_torch_function
-
+import torch
+from torch.nn import functional as F
+from torch.nn.functional import *
+from torch.nn.modules.module import Module
+from torch.nn.modules.activation import MultiheadAttention
+from torch.nn.modules.container import ModuleList
+from torch.nn.init import xavier_uniform_
+from torch.nn.modules.dropout import Dropout
+from torch.nn.modules.linear import Linear, NonDynamicallyQuantizableLinear as _LinearWithBias
+from torch.nn.modules.normalization import LayerNorm
+from torch.nn.init import xavier_uniform_
+from torch.nn.init import constant_
+from torch.nn.init import xavier_normal_
+from torch.nn.parameter import Parameter
+from torch.overrides import has_torch_function, handle_torch_function
 
 class MultiHeadAttention(torch.nn.Module):
     def __init__(self, embed_dim, num_heads):

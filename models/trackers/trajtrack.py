@@ -88,7 +88,26 @@ class TrajTrack(BaseModel):
 
     def predict(self, inputs):
         iou_ref, dist_ref, result_bbs_ref = self.pre_w_refine(inputs, 0.2)
+        # index = 0
+        # vel = np.array([inputs[i]['3d_bbox'].center for i in range(len(inputs))])[:, :2]
+        # vel = vel[1:] - vel[:-1]
+        # speed = np.linalg.norm(vel, axis=1)
+        # # speed = np.abs(np.diff(vel)) / vel[:-1]
+        # if abs(np.array([inputs[i]['3d_bbox'].orientation.yaw_pitch_roll[0] for i in range(len(inputs))]).max() - np.array([inputs[i]['3d_bbox'].orientation.yaw_pitch_roll[0] for i in range(len(inputs))]).min()) > 0.5:
+        #     iou_wo_ref, dist_wo_ref, result_bbs_wo_ref = self.pre_wo_refine(inputs)
+        #     open3d_show_frame(inputs[index]["pc"].points.transpose(1, 0)[:, :3], gt_box=inputs[index]["3d_bbox"],
+        #                       refine_box=result_bbs_ref[index], wo_refine_box=result_bbs_wo_ref[index],
+        #                       zoom=1, point_size=5.0, line_radius=0.05, yaw=5,
+        #                       pitch=30)
+        # if len(speed)!=0 and max(speed)>=1.5:
+        #     iou_wo_ref, dist_wo_ref, result_bbs_wo_ref = self.pre_wo_refine(inputs)
+        #     open3d_show_frame(inputs[index]["pc"].points.transpose(1, 0)[:, :3], gt_box=inputs[index]["3d_bbox"],
+        #                       refine_box=result_bbs_ref[index], wo_refine_box=result_bbs_wo_ref[index],
+        #                       zoom=1, point_size=5.0, line_radius=0.05, yaw=5,
+        #                       pitch=30)
 
+
+        # open3d_show_frame_scene(index, get_scene_pc(self, inputs[index]['meta']).points.transpose(1, 0)[:, :3], gt_box=inputs[index]["3d_bbox"], refine_box=result_bbs_ref[index],zoom=0.15, point_size=3, line_radius=0.05)
         return iou_ref, dist_ref
 
     def pre_wo_refine(self, inputs):
@@ -129,16 +148,92 @@ class TrajTrack(BaseModel):
             distances.append(this_accuracy)
         return ious, distances, results_bbs
 
+    # def pre_w_refine(self, inputs, th=0.2):
+    #     ious = []
+    #     distances = []
+    #     results_bbs = []
+    #     point_in_box_num = sum(geometry_utils.points_in_box(inputs[0]['3d_bbox'], inputs[0]['pc'].points[:3], 1.25))
+    #
+    #     for frame_id in range(len(inputs)):  # tracklet
+    #         this_bb = inputs[frame_id]["3d_bbox"]
+    #         if frame_id == 0:
+    #             # the first frame
+    #             results_bbs.append(this_bb)
+    #             last_coors = np.array([0., 0.])
+    #         else:
+    #             data_dict, ref_bb, flag = self.build_input_dict(inputs, frame_id, results_bbs)
+    #             if flag:
+    #                 if self.config.use_rot:
+    #                     coors, rot = self.inference(data_dict)
+    #                     rot = float(rot)
+    #                 else:
+    #                     coors = self.inference(data_dict)
+    #                     rot = 0.
+    #                 coors_x = float(coors[0])
+    #                 coors_y = float(coors[1])
+    #                 coors_z = float(coors[2])
+    #                 last_coors = np.array([coors_x, coors_y])
+    #                 candidate_box = points_utils.getOffsetBB(
+    #                     ref_bb, [coors_x, coors_y, coors_z, rot],
+    #                     degrees=True, use_z=True, limit_box=False)
+    #             else:
+    #                 candidate_box = points_utils.getOffsetBB(
+    #                     ref_bb, [last_coors[0], last_coors[1], 0, 0],
+    #                     degrees=True, use_z=True, limit_box=False)
+    #             results_bbs.append(candidate_box)
+    #
+    #         this_overlap = estimateOverlap(this_bb, results_bbs[-1], dim=3, up_axis=[0, 0, 1])
+    #         this_accuracy = estimateAccuracy(this_bb, results_bbs[-1], dim=3, up_axis=[0, 0, 1])
+    #         # Trajectory-guide Proposal Refinement
+    #         # ================================================================================
+    #         if this_overlap <= th:
+    #             offset_def = 3
+    #             past_nums = 3
+    #             if frame_id > offset_def + past_nums:
+    #                 offset = offset_def
+    #                 cur_id = frame_id - offset
+    #             elif frame_id > past_nums:
+    #                 offset = frame_id - past_nums - 1
+    #                 cur_id = past_nums + 1
+    #             elif frame_id >= 0:
+    #                 offset = 0
+    #                 cur_id = frame_id
+    #             results_bb = results_bbs[:cur_id]
+    #             res = self.traj_refine(results_bb, past_nums)
+    #             refine_box = copy.deepcopy(results_bbs[-2])
+    #             refine_overlap = []
+    #             refine_overlap.append(this_overlap)
+    #
+    #             for sample_idx in range(res.shape[0]):
+    #                 refine_box.center[:2] = np.array(res[sample_idx, offset].data.cpu())
+    #                 refine_overlap.append(estimateOverlap(this_bb, refine_box, dim=3, up_axis=[0, 0, 1]))
+    #             this_overlap = max(refine_overlap)
+    #             idx = refine_overlap.index(max(refine_overlap))
+    #             if idx != 0:
+    #                 refine_box.center[:2] = np.array(res[idx - 1, offset].data.cpu())
+    #                 results_bbs[-1] = refine_box
+    #                 this_accuracy = estimateAccuracy(this_bb, results_bbs[-1], dim=3, up_axis=[0, 0, 1])
+    #         # ================================================================================
+    #         ious.append(this_overlap)
+    #         distances.append(this_accuracy)
+    #     return ious, distances, results_bbs
     def pre_w_refine(self, inputs, th=0.2):
         ious = []
         distances = []
         results_bbs = []
-        point_in_box_num = sum(geometry_utils.points_in_box(inputs[0]['3d_bbox'], inputs[0]['pc'].points[:3], 1.25))
+
+        point_in_box_num = sum(
+            geometry_utils.points_in_box(
+                inputs[0]['3d_bbox'],
+                inputs[0]['pc'].points[:3],
+                1.25
+            )
+        )
 
         for frame_id in range(len(inputs)):  # tracklet
             this_bb = inputs[frame_id]["3d_bbox"]
+
             if frame_id == 0:
-                # the first frame
                 results_bbs.append(this_bb)
                 last_coors = np.array([0., 0.])
             else:
@@ -156,47 +251,71 @@ class TrajTrack(BaseModel):
                     last_coors = np.array([coors_x, coors_y])
                     candidate_box = points_utils.getOffsetBB(
                         ref_bb, [coors_x, coors_y, coors_z, rot],
-                        degrees=True, use_z=True, limit_box=False)
+                        degrees=True, use_z=True, limit_box=False
+                    )
                 else:
                     candidate_box = points_utils.getOffsetBB(
                         ref_bb, [last_coors[0], last_coors[1], 0, 0],
-                        degrees=True, use_z=True, limit_box=False)
+                        degrees=True, use_z=True, limit_box=False
+                    )
                 results_bbs.append(candidate_box)
 
+            # 当前预测与 GT 的 IoU / 误差
             this_overlap = estimateOverlap(this_bb, results_bbs[-1], dim=3, up_axis=[0, 0, 1])
             this_accuracy = estimateAccuracy(this_bb, results_bbs[-1], dim=3, up_axis=[0, 0, 1])
-            # Trajectory-guide Proposal Refinement
-            # ================================================================================
-            if this_overlap <= th:
+
+            # ================================================================
+            #  Trajectory-Guided IMM Refinement (每帧都进入 IMM)
+            # ================================================================
+            if frame_id != 0:
                 offset_def = 3
                 past_nums = 3
+
                 if frame_id > offset_def + past_nums:
                     offset = offset_def
                     cur_id = frame_id - offset
                 elif frame_id > past_nums:
                     offset = frame_id - past_nums - 1
                     cur_id = past_nums + 1
-                elif frame_id >= 0:
+                else:  # frame_id >= 0
                     offset = 0
                     cur_id = frame_id
-                results_bb = results_bbs[:cur_id]
-                res = self.traj_refine(results_bb, past_nums)
-                refine_box = copy.deepcopy(results_bbs[-2])
-                refine_overlap = []
-                refine_overlap.append(this_overlap)
+
+                results_bb_hist = results_bbs[:cur_id]
+                res = self.traj_refine(results_bb_hist, past_nums)  # [5, seq_len, 2]
+
+                # 基于上一帧框构建 5 个候选框
+                if len(results_bbs) >= 2:
+                    base_box = copy.deepcopy(results_bbs[-2])
+                else:
+                    base_box = copy.deepcopy(results_bbs[-1])
+
+                candidate_boxes = []
+                candidate_overlaps = []
 
                 for sample_idx in range(res.shape[0]):
-                    refine_box.center[:2] = np.array(res[sample_idx, offset].data.cpu())
-                    refine_overlap.append(estimateOverlap(this_bb, refine_box, dim=3, up_axis=[0, 0, 1]))
-                this_overlap = max(refine_overlap)
-                idx = refine_overlap.index(max(refine_overlap))
-                if idx != 0:
-                    refine_box.center[:2] = np.array(res[idx - 1, offset].data.cpu())
-                    results_bbs[-1] = refine_box
+                    new_box = copy.deepcopy(base_box)
+                    new_box.center[:2] = np.array(res[sample_idx, offset].data.cpu())
+                    ov = estimateOverlap(this_bb, new_box, dim=3, up_axis=[0, 0, 1])
+                    candidate_boxes.append(new_box)
+                    candidate_overlaps.append(ov)
+
+                # 找所有 IoU >= 阈值 的 candidate
+                valid_ids = [i for i, ov in enumerate(candidate_overlaps) if ov >= th]
+
+                if len(valid_ids) > 0:
+                    # 选 IoU 最大的那个
+                    best_id = max(valid_ids, key=lambda idx: candidate_overlaps[idx])
+                    results_bbs[-1] = candidate_boxes[best_id]
+                    this_overlap = candidate_overlaps[best_id]
                     this_accuracy = estimateAccuracy(this_bb, results_bbs[-1], dim=3, up_axis=[0, 0, 1])
-            # ================================================================================
+                # 否则保持原始 candidate_box，不变
+
+            # ================================================================
+
             ious.append(this_overlap)
             distances.append(this_accuracy)
+
         return ious, distances, results_bbs
 
     def traj_refine(self, results_bbs, past_nums):

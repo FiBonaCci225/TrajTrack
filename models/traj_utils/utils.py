@@ -1,16 +1,13 @@
-"""
-Code borrowed from Xinshuo_PyToolbox: https://github.com/xinshuoweng/Xinshuo_PyToolbox
-"""
-
 import os
 import shutil
-from models.traj_utils import torch
+import torch
 import numpy as np
 import random
 import time
 import copy
 import glob, glob2
-from models.traj_utils.torch import nn
+from torch import nn
+
 
 
 class AverageMeter(object):     

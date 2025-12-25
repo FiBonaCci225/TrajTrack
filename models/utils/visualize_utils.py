@@ -68,7 +68,7 @@ def create_thick_bbox(corners, color, line_radius):
     return cylinders
 
 
-def open3d_show_frame(index, xyz, gt_box=None, refine_box=None, wo_refine_box=None, refine_traj=None, gt_traj=None,
+def open3d_show_frame(xyz, gt_box=None, refine_box=None, wo_refine_box=None, refine_traj=None, gt_traj=None,
                       window_name="Final View", zoom=1, point_size=1.0, line_radius=0.01, yaw=5, pitch=30):
     # 创建可视化器
     vis = o3d.visualization.Visualizer()
@@ -160,13 +160,13 @@ def open3d_show_frame(index, xyz, gt_box=None, refine_box=None, wo_refine_box=No
     # 运行可视化
     vis.update_renderer()
     vis.run()
-    output_dir = "/home/fbc/Code/P2P_traj/paper/correct_traj"
-    frame_path = os.path.join(output_dir, f"frame_{index:04d}.png")
-    vis.capture_screen_image(frame_path)
+    # output_dir = "/home/fbc/Code/P2P_traj/paper/correct_traj"
+    # frame_path = os.path.join(output_dir, f"frame_{index:04d}.png")
+    # vis.capture_screen_image(frame_path)
     vis.destroy_window()
 
 
-def open3d_show_frame_scene(relate_dist, index, xyz, gt_box=None, refine_box=None, wo_refine_box=None,
+def open3d_show_frame_scene(index, xyz, gt_box=None, refine_box=None, wo_refine_box=None,
                       refine_iou=0, wo_refine_iou=0, window_name="Final View",
                       zoom=1, point_size=1.0, line_radius=0.3, num_lines=15, yaw=45, pitch=60):
 

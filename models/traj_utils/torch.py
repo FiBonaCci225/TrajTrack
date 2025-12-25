@@ -1,6 +1,7 @@
+import torch
 import numpy as np
-from models.traj_utils.torch import lr_scheduler
-from models.traj_utils.torch import nn
+from torch.optim import lr_scheduler
+from torch import nn
 
 tensor = torch.tensor
 DoubleTensor = torch.DoubleTensor
