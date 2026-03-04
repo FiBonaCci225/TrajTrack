@@ -81,10 +81,18 @@ Our implementation is based on [Open3DSOT](https://github.com/Ghostish/Open3DSOT
 If any parts of our paper and code help your research, please consider citing us and giving a star to our repository.
 
 ```bibtex
-@article{trajtrack,
- title={Beyond Frame-wise Tracking: A Trajectory-based Paradigm for Efficient Point Cloud Tracking,
- year={2025}
-}
+@ARTICLE{11358684,
+  author={Fan, BaiChen and Zhou, Sifan and Li, Jian and Zhao, Shibo and Cao, Muqing and Wang, Qin},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={Beyond Frame-Wise Tracking: A Trajectory-Based Paradigm for Efficient Point Cloud Tracking}, 
+  year={2026},
+  volume={11},
+  number={3},
+  pages={3430-3437},
+  keywords={Trajectory;Point cloud compression;Proposals;Three-dimensional displays;Target tracking;Robustness;Predictive models;Object tracking;Transformers;Feature extraction;Autonomous driving;computer vision;deep learning;motion analysis},
+  doi={10.1109/LRA.2026.3655309}}
+
+
 
 
 
